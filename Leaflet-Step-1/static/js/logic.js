@@ -6,12 +6,23 @@ d3.json(geojsonUrl).then(function (data) {
     createFeatures(data.features);
   });
   
+//Create style function for circles
 
   function createFeatures(earthquakeData) {
+    function circleStyle(feature) {
+        return {
+          opacity: 1,
+          fillOpacity: 1,
+          fillColor: getColor(feature.properties.mag),
+          color: "#000000",
+          radius: getRadius(feature.properties.mag),
+          stroke: true,
+          weight: 0.5
+        };
   //Define function to run for every feature
   //Create popups
     function onEachFeature(features, layer) {
-        layer.bindPopup(`<h3>${features.properties.place}</h3><hr><p>Time: ${new Date(features.properties.time)}</p><p>Magnitude: ${features.properties.mag}</p><p>Depth: ${features.geometry.coordinates[2]}</p>`);
+        layer.bindPopup(`<h3>${features.properties.place}</h3><hr><p>Time: ${new Date(features.properties.time)}</p><p>Magnitude: ${features.properties.mag}</p><p>Earthquake Depth: ${features.geometry.coordinates[2]}</p>`);
     }
   
     var earthquakes = L.geoJSON(earthquakeData, {
