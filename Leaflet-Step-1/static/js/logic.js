@@ -1,8 +1,6 @@
 //Create URL for query
 var geojsonUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson"
 
-//Create initial map object
-var myMap = L.map("map").setview([45.52, -122.67],5);
 
 //Use d3 to make request for features
 d3.json(geojsonUrl).then(function (data) {
@@ -43,14 +41,20 @@ function createMap(earthquakes) {
 
     };
   
-    // Create our map, giving it the streetmap and earthquakes layers to display on load.
-  
+    //Create map object
+    var myMap = L.map("map", {
+        center: [45.52, -122.67],
+        zoom: 5,
+        layers: [street, earthquakes]
+    });
+
     // Create a layer control.
     // Pass it our baseMaps and overlayMaps.
     // Add the layer control to the map.
     L.control.layers(baseMaps, overlayMaps, {
-      collapsed: false
+      collapsed: true
     }).addTo(myMap);
   
   }
+  
   
