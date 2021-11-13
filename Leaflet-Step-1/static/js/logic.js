@@ -1,36 +1,29 @@
-//Create URL for query.
+//Create URL for query
 var geojsonUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson"
 
-//Use d3 to make request
+//Create initial map object
+var myMap = L.map("map").setview([45.52, -122.67],5);
+
+//Use d3 to make request for features
 d3.json(geojsonUrl).then(function (data) {
     createFeatures(data.features);
-  });
-  
-//Create style function for circles
+});
 
-  function createFeatures(earthquakeData) {
-    function circleStyle(feature) {
-        return {
-          opacity: 1,
-          fillOpacity: 1,
-          fillColor: getColor(feature.properties.mag),
-          color: "#000000",
-          radius: getRadius(feature.properties.mag),
-          stroke: true,
-          weight: 0.5
-        };
-  //Define function to run for every feature
-  //Create popups
-    function onEachFeature(features, layer) {
-        layer.bindPopup(`<h3>${features.properties.place}</h3><hr><p>Time: ${new Date(features.properties.time)}</p><p>Magnitude: ${features.properties.mag}</p><p>Earthquake Depth: ${features.geometry.coordinates[2]}</p>`);
-    }
-  
-    var earthquakes = L.geoJSON(earthquakeData, {
-    onEachFeature: onEachFeature
-    });
-
-  createMap(earthquakes);
+ //Define function to run for every feature
+function createFeatures(earthquakeData) {
+    //Create popups
+      function onEachFeature(features, layer) {
+          layer.bindPopup(`<h3>${features.properties.place}</h3><hr><p>Time: ${new Date(features.properties.time)}</p><p>Magnitude: ${features.properties.mag}</p><p>Earthquake Depth: ${features.geometry.coordinates[2]}</p>`);
+      }
+    
+      //Contains geojson features
+      var earthquakes = L.geoJSON(earthquakeData, {
+      onEachFeature: onEachFeature
+      });
+      
+      createMap(earthquakes);
 }
+
 
 function createMap(earthquakes) {
 
@@ -47,14 +40,10 @@ function createMap(earthquakes) {
     // Create an overlay object to hold earthquakes
     var overlayMaps = {
       Earthquakes: earthquakes
+
     };
   
     // Create our map, giving it the streetmap and earthquakes layers to display on load.
-    var myMap = L.map("map", {
-      center: [45.52, -122.67],
-      zoom: 5,
-      layers: [street, earthquakes]
-    });
   
     // Create a layer control.
     // Pass it our baseMaps and overlayMaps.
